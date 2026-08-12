@@ -86,7 +86,7 @@ codex-netcheck
 ## Development
 
 ```bash
-git clone https://github.com/guokaitu/codex-netcheck.git
+git clone https://github.com/cntopcode/codex-netcheck.git
 cd codex-netcheck
 npm install
 npm test

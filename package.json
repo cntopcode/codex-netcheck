@@ -35,16 +35,16 @@
     "diagnostics",
     "cli"
   ],
-  "author": "guokaitu",
+  "author": "cntopcode",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/guokaitu/codex-netcheck.git"
+    "url": "git+https://github.com/cntopcode/codex-netcheck.git"
   },
   "bugs": {
-    "url": "https://github.com/guokaitu/codex-netcheck/issues"
+    "url": "https://github.com/cntopcode/codex-netcheck/issues"
   },
-  "homepage": "https://github.com/guokaitu/codex-netcheck#readme",
+  "homepage": "https://github.com/cntopcode/codex-netcheck#readme",
   "dependencies": {
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
