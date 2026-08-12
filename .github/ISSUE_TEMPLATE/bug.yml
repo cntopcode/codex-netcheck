@@ -1,0 +1,28 @@
+name: Bug report
+description: 报告可复现的网络检查问题
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 请勿提交 API Key、Cookie、Token、代理密码或未脱敏配置。
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 实际发生了什么，预期是什么？
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: 脱敏报告
+      description: 粘贴 `codex-netcheck --report report.md` 的内容。
+      render: markdown
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      placeholder: 0.1.0
+    validations:
+      required: true

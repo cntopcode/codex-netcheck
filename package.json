@@ -1,0 +1,63 @@
+{
+  "name": "codex-netcheck",
+  "version": "0.1.0",
+  "description": "Diagnose DNS, TCP, TLS, HTTPS, WebSocket, proxy, and routing issues affecting OpenAI and Codex.",
+  "type": "module",
+  "bin": {
+    "codex-netcheck": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli.ts",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run check && npm test && npm run build",
+    "start": "node dist/cli.js"
+  },
+  "keywords": [
+    "codex",
+    "openai",
+    "network",
+    "websocket",
+    "diagnostics",
+    "cli"
+  ],
+  "author": "guokaitu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guokaitu/codex-netcheck.git"
+  },
+  "bugs": {
+    "url": "https://github.com/guokaitu/codex-netcheck/issues"
+  },
+  "homepage": "https://github.com/guokaitu/codex-netcheck#readme",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@types/node": "^24.2.1",
+    "@types/ws": "^8.18.1",
+    "eslint": "^9.32.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^3.2.4"
+  }
+}
