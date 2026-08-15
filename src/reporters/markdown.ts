@@ -3,6 +3,7 @@ import type { DiagnosticReport } from '../types.js';
 const labels = { pass: '通过', warn: '警告', fail: '失败', skip: '跳过' } as const;
 
 export function renderMarkdown(report: DiagnosticReport): string {
+  const includesClaude = report.results.some((result) => result.id.includes('claude'));
   const rows = report.results.map((result) => {
     const summary = result.summary.replaceAll('|', '\\|').replaceAll('\n', ' ');
     return `| ${result.name} | ${labels[result.status]} | ${result.latencyMs ?? '—'} | ${summary} |`;
@@ -12,7 +13,7 @@ export function renderMarkdown(report: DiagnosticReport): string {
     .map((result) => `- **${result.name}**：${result.remediation}`);
 
   return [
-    '# OpenAI/Codex 网络诊断报告',
+    includesClaude ? '# OpenAI/Codex + Claude 网络诊断报告' : '# OpenAI/Codex 网络诊断报告',
     '',
     `- 生成时间：${report.generatedAt}`,
     `- 平台：${report.platform.os} ${report.platform.release} (${report.platform.architecture})`,

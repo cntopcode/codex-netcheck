@@ -1,11 +1,11 @@
-import { HTTPS_TARGETS } from '../constants.js';
+import { httpsTargets, VERSION } from '../constants.js';
 import type { CheckResult, Probe } from '../types.js';
 import { errorDetails, measure, withTimeout } from '../utils.js';
 
 export const checkHttps: Probe = async (context) => {
   const results: CheckResult[] = [];
 
-  for (const target of HTTPS_TARGETS) {
+  for (const target of httpsTargets(context.options)) {
     let lastError: unknown;
     let completed = false;
     // 网络抖动时只重试一次，避免把偶发的连接复位误判为持续故障。
@@ -18,7 +18,7 @@ export const checkHttps: Probe = async (context) => {
               method: 'HEAD',
               redirect: 'manual',
               signal,
-              headers: { 'user-agent': 'codex-netcheck/0.1.0' },
+              headers: { 'user-agent': `codex-netcheck/${VERSION}` },
             }),
           context.options.timeoutMs,
         ),

@@ -25,7 +25,12 @@ function renderResult(result: CheckResult): string {
 
 export function renderText(report: DiagnosticReport, color = true): string {
   if (!color) chalk.level = 0;
-  const heading = chalk.bold.cyan('codex-netcheck · OpenAI/Codex 网络诊断');
+  const includesClaude = report.results.some((result) => result.id.includes('claude'));
+  const heading = chalk.bold.cyan(
+    includesClaude
+      ? 'codex-netcheck · OpenAI/Codex + Claude 网络诊断'
+      : 'codex-netcheck · OpenAI/Codex 网络诊断',
+  );
   const lines = report.results.map(renderResult);
   const summary = [
     '',

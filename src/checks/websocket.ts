@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { WEBSOCKET_TARGET } from '../constants.js';
+import { VERSION, WEBSOCKET_TARGET } from '../constants.js';
 import type { Probe } from '../types.js';
 import { errorDetails, measure } from '../utils.js';
 
@@ -12,7 +12,7 @@ export const checkWebSocket: Probe = async (context) => {
           const websocket = new WebSocket(WEBSOCKET_TARGET.url, {
             handshakeTimeout: context.options.timeoutMs,
             headers: {
-              'user-agent': 'codex-netcheck/0.1.0',
+              'user-agent': `codex-netcheck/${VERSION}`,
               'openai-beta': 'realtime=v1',
             },
           });

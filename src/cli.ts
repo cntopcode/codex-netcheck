@@ -2,6 +2,7 @@
 import { writeFile } from 'node:fs/promises';
 import process from 'node:process';
 import { Command, Option } from 'commander';
+import { VERSION } from './constants.js';
 import { runDiagnostics } from './index.js';
 import { renderMarkdown } from './reporters/markdown.js';
 import { renderText } from './reporters/text.js';
@@ -12,13 +13,15 @@ interface CliOptions {
   timeout: string;
   watch?: string;
   color: boolean;
+  claude?: boolean;
   includeSensitive?: boolean;
 }
 
 const program = new Command()
   .name('codex-netcheck')
   .description('诊断影响 OpenAI 和 Codex 的 DNS、TLS、HTTPS、WebSocket、代理及路由问题')
-  .version('0.1.0')
+  .version(VERSION)
+  .option('--claude', '在 OpenAI/Codex 之外，同时检查 Claude/Anthropic 连接')
   .option('--json', '以 JSON 输出')
   .option('--report <path>', '另存为 Markdown 或 JSON 报告')
   .option('--timeout <seconds>', '单项检查超时秒数', '8')
@@ -52,6 +55,7 @@ async function runOnce() {
   const report = await runDiagnostics({
     timeoutMs,
     includeSensitive: options.includeSensitive ?? false,
+    includeClaude: options.claude ?? false,
     language: 'zh',
   });
   const output = options.json

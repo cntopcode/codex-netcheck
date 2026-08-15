@@ -26,6 +26,7 @@ export interface CheckResult {
 export interface RunOptions {
   timeoutMs: number;
   includeSensitive: boolean;
+  includeClaude?: boolean;
   language: 'zh' | 'en';
 }
 

@@ -1,5 +1,5 @@
 import { Resolver } from 'node:dns/promises';
-import { OPENAI_HOSTS } from '../constants.js';
+import { diagnosticHosts } from '../constants.js';
 import type { CheckResult, Probe } from '../types.js';
 import { errorDetails, measure } from '../utils.js';
 
@@ -7,7 +7,7 @@ export const checkDns: Probe = async (context) => {
   const resolver = new Resolver();
   const results: CheckResult[] = [];
 
-  for (const host of OPENAI_HOSTS) {
+  for (const host of diagnosticHosts(context.options)) {
     try {
       const { value, latencyMs } = await measure(() => resolver.resolve4(host));
       context.dnsAddresses.set(host, value);

@@ -2,9 +2,9 @@
 
 Diagnose why OpenAI or Codex feels slow, reconnects repeatedly, or fails behind a proxy.
 
-`codex-netcheck` tests DNS, TCP, TLS, HTTPS, WebSocket handshakes, proxy settings, and the active route from one command. It runs locally and redacts credentials from reports by default.
+`codex-netcheck` tests DNS, TCP, TLS, HTTPS, WebSocket handshakes, proxy settings, and the active route from one command. Add `--claude` to check Anthropic and Claude alongside OpenAI. It runs locally and redacts credentials from reports by default.
 
-> macOS and Linux · Node.js 20+ · No OpenAI API key required
+> macOS and Linux · Node.js 20+ · No OpenAI or Anthropic API key required
 
 [中文文档](README.zh-CN.md)
 
@@ -12,6 +12,12 @@ Diagnose why OpenAI or Codex feels slow, reconnects repeatedly, or fails behind 
 
 ```bash
 npx codex-netcheck
+```
+
+Check OpenAI/Codex and Claude together:
+
+```bash
+npx codex-netcheck --claude
 ```
 
 Example:
@@ -53,6 +59,9 @@ npx codex-netcheck --watch 30
 
 # Change the timeout per check
 npx codex-netcheck --timeout 15
+
+# Include Claude API and claude.ai checks
+npx codex-netcheck --claude
 ```
 
 ## Checks
@@ -61,16 +70,18 @@ npx codex-netcheck --timeout 15
 |---|---|
 | Environment | OS, architecture, and Node.js runtime |
 | Proxy | Proxy environment variables and macOS system proxy |
-| DNS | IPv4 resolution for `api.openai.com` and `chatgpt.com` |
+| DNS | IPv4 resolution for OpenAI hosts and, with `--claude`, Anthropic hosts |
 | Route | Direct interface versus VPN/TUN route |
 | TCP | Reachability of `api.openai.com:443` |
 | TLS | Certificate validation, protocol, cipher, and handshake time |
 | HTTPS | Reachability and time to response for OpenAI and ChatGPT |
 | WebSocket | Whether an OpenAI WSS handshake reaches the service |
 
+Claude mode checks `api.anthropic.com` and `claude.ai` across DNS, route, TCP, TLS, and HTTPS. It does not add a Claude WebSocket probe because Anthropic does not publish a stable client WSS endpoint for this purpose.
+
 ## Privacy and security
 
-- No API key is required or sent.
+- No OpenAI or Anthropic API key is required or sent.
 - Probes use unauthenticated requests only.
 - API keys, bearer tokens, proxy credentials, cookies, and home-directory paths are redacted.
 - Reports are created with owner-only file permissions where supported.

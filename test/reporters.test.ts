@@ -28,4 +28,21 @@ describe('renderMarkdown', () => {
     expect(output).toContain('| 检查项 | 状态 | 延迟（ms） | 说明 |');
     expect(output).toContain('| DNS | 通过 | 12 | 解析成功 |');
   });
+
+  it('Claude 检查使用联合报告标题', () => {
+    const claudeReport: DiagnosticReport = {
+      ...report,
+      results: [
+        {
+          id: 'https-claude-api',
+          category: 'https',
+          name: 'Claude API HTTPS',
+          status: 'pass',
+          summary: '服务可达',
+        },
+      ],
+    };
+
+    expect(renderMarkdown(claudeReport)).toContain('# OpenAI/Codex + Claude 网络诊断报告');
+  });
 });

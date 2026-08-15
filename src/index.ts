@@ -19,6 +19,7 @@ export { renderText } from './reporters/text.js';
 const DEFAULT_OPTIONS: RunOptions = {
   timeoutMs: 8_000,
   includeSensitive: false,
+  includeClaude: false,
   language: 'zh',
 };
 
@@ -33,13 +34,15 @@ const probes: Probe[] = [
   checkWebSocket,
 ];
 
-function deriveSummary(results: CheckResult[]): DiagnosticReport['summary'] {
+function deriveSummary(results: CheckResult[], includeClaude: boolean): DiagnosticReport['summary'] {
   const passed = results.filter((result) => result.status === 'pass').length;
   const warnings = results.filter((result) => result.status === 'warn').length;
   const failed = results.filter((result) => result.status === 'fail').length;
   const skipped = results.filter((result) => result.status === 'skip').length;
   let status: CheckStatus = 'pass';
-  let conclusion = 'OpenAI 基础网络链路正常。若 Codex 仍响应慢，更可能与模型推理、服务端负载或长上下文有关。';
+  let conclusion = includeClaude
+    ? 'OpenAI 与 Claude 基础网络链路正常。若客户端仍响应慢，更可能与模型推理、服务端负载或长上下文有关。'
+    : 'OpenAI 基础网络链路正常。若 Codex 仍响应慢，更可能与模型推理、服务端负载或长上下文有关。';
 
   if (failed > 0) {
     status = 'fail';
@@ -76,7 +79,7 @@ export async function runDiagnostics(input: Partial<RunOptions> = {}): Promise<D
       architecture: os.arch(),
       node: process.version,
     },
-    summary: deriveSummary(results),
+    summary: deriveSummary(results, options.includeClaude ?? false),
     results,
   };
 

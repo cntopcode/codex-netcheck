@@ -2,14 +2,20 @@
 
 一条命令诊断 OpenAI/Codex 响应慢、反复重连、代理下无法访问等网络问题。
 
-`codex-netcheck` 会检查 DNS、TCP、TLS、HTTPS、WebSocket 握手、系统代理和实际路由，并给出可执行的排查建议。所有检查都在本机运行，报告默认自动脱敏。
+`codex-netcheck` 会检查 DNS、TCP、TLS、HTTPS、WebSocket 握手、系统代理和实际路由，并给出可执行的排查建议。增加 `--claude` 参数后，可以在检查 OpenAI 的同时检查 Anthropic 与 Claude。所有检查都在本机运行，报告默认自动脱敏。
 
-> 支持 macOS 和 Linux · 需要 Node.js 20+ · 不需要 OpenAI API Key
+> 支持 macOS 和 Linux · 需要 Node.js 20+ · 不需要 OpenAI 或 Anthropic API Key
 
 ## 快速开始
 
 ```bash
 npx codex-netcheck
+```
+
+同时检查 OpenAI/Codex 和 Claude：
+
+```bash
+npx codex-netcheck --claude
 ```
 
 典型输出：
@@ -51,6 +57,9 @@ npx codex-netcheck --watch 30
 
 # 单项检查超时 15 秒
 npx codex-netcheck --timeout 15
+
+# 追加 Claude API 和 claude.ai 检查
+npx codex-netcheck --claude
 ```
 
 ## 检查内容
@@ -59,16 +68,18 @@ npx codex-netcheck --timeout 15
 |---|---|
 | 运行环境 | 操作系统、架构和 Node.js 版本 |
 | 代理 | 代理环境变量和 macOS 系统代理 |
-| DNS | `api.openai.com`、`chatgpt.com` 是否正常解析 |
+| DNS | OpenAI 域名，以及启用 `--claude` 后的 Anthropic 域名是否正常解析 |
 | 路由 | 流量直连还是经过 VPN/TUN 接口 |
 | TCP | `api.openai.com:443` 是否可建立连接 |
 | TLS | 证书校验、协议、密码套件和握手延迟 |
 | HTTPS | OpenAI、ChatGPT 服务是否可达及响应时间 |
 | WebSocket | OpenAI WSS 握手是否能到达服务端 |
 
+Claude 模式会对 `api.anthropic.com` 和 `claude.ai` 执行 DNS、路由、TCP、TLS 与 HTTPS 检查。由于 Anthropic 没有为此场景公开稳定的客户端 WSS 端点，因此不会添加虚假的 Claude WebSocket 探测。
+
 ## 隐私与安全
 
-- 不需要也不会读取 OpenAI API Key。
+- 不需要也不会读取 OpenAI 或 Anthropic API Key。
 - 只发送无认证探测请求。
 - 自动隐藏 API Key、Bearer Token、代理凭据、Cookie 和用户目录。
 - 报告文件在系统支持时采用仅当前用户可读写的权限。

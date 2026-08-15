@@ -1,7 +1,7 @@
 {
   "name": "codex-netcheck",
-  "version": "0.1.0",
-  "description": "Diagnose DNS, TCP, TLS, HTTPS, WebSocket, proxy, and routing issues affecting OpenAI and Codex.",
+  "version": "0.2.0",
+  "description": "Diagnose DNS, TCP, TLS, HTTPS, WebSocket, proxy, and routing issues affecting OpenAI, Codex, and Claude.",
   "type": "module",
   "bin": {
     "codex-netcheck": "dist/cli.js"
@@ -30,6 +30,8 @@
   "keywords": [
     "codex",
     "openai",
+    "claude",
+    "anthropic",
     "network",
     "websocket",
     "diagnostics",
