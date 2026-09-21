@@ -1,5 +1,7 @@
 # codex-netcheck
 
+[![npm version](https://img.shields.io/npm/v/codex-netcheck)](https://www.npmjs.com/package/codex-netcheck)
+
 Diagnose why OpenAI or Codex feels slow, reconnects repeatedly, or fails behind a proxy.
 
 `codex-netcheck` tests DNS, TCP, TLS, HTTPS, WebSocket handshakes, proxy settings, and the active route from one command. Add `--claude` to check Anthropic and Claude alongside OpenAI. It runs locally and redacts credentials from reports by default.

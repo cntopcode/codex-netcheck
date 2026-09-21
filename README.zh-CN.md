@@ -1,5 +1,7 @@
 # codex-netcheck
 
+[![npm 版本](https://img.shields.io/npm/v/codex-netcheck)](https://www.npmjs.com/package/codex-netcheck)
+
 一条命令诊断 OpenAI/Codex 响应慢、反复重连、代理下无法访问等网络问题。
 
 `codex-netcheck` 会检查 DNS、TCP、TLS、HTTPS、WebSocket 握手、系统代理和实际路由，并给出可执行的排查建议。增加 `--claude` 参数后，可以在检查 OpenAI 的同时检查 Anthropic 与 Claude。所有检查都在本机运行，报告默认自动脱敏。
