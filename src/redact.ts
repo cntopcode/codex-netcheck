@@ -4,7 +4,7 @@ const SECRET_KEYS = /(?:api[_-]?key|authorization|cookie|password|passwd|proxy[_
 const SECRET_VALUE_PATTERNS = [
   /\bsk-[A-Za-z0-9_-]{12,}\b/g,
   /\bBearer\s+[A-Za-z0-9._~+/-]+=*\b/gi,
-  /\b(?:https?|socks5?):\/\/([^\s/@:]+):([^\s/@]+)@/gi,
+  /\b(?:https?|socks(?:4a?|5h?)?):\/\/[^\s/@]+@/gi,
 ];
 
 export function redactString(value: string, includeSensitive = false): string {

@@ -41,8 +41,8 @@ function deriveSummary(results: CheckResult[], includeClaude: boolean): Diagnost
   const skipped = results.filter((result) => result.status === 'skip').length;
   let status: CheckStatus = 'pass';
   let conclusion = includeClaude
-    ? 'OpenAI 与 Claude 基础网络链路正常。若客户端仍响应慢，更可能与模型推理、服务端负载或长上下文有关。'
-    : 'OpenAI 基础网络链路正常。若 Codex 仍响应慢，更可能与模型推理、服务端负载或长上下文有关。';
+    ? '所选路径上的 OpenAI 与 Claude 网络探针通过；未验证账号权限或实际模型请求。'
+    : '所选路径上的 OpenAI 网络探针通过；未验证 Codex 账号权限或实际模型请求。';
 
   if (failed > 0) {
     status = 'fail';
@@ -50,7 +50,7 @@ function deriveSummary(results: CheckResult[], includeClaude: boolean): Diagnost
     conclusion = `检测到 ${failed} 项失败，优先排查：${categories.join('、')}。`;
   } else if (warnings > 0) {
     status = 'warn';
-    conclusion = '基础连接可用，但检测到代理、隧道路由或非预期响应；建议对照关闭代理后的结果。';
+    conclusion = '检查完成，有警告项，请按各项说明判断；可用 --direct 对比直连/TUN 路径。';
   }
 
   return { status, passed, warnings, failed, skipped, conclusion };

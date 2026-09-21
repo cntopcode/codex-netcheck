@@ -6,8 +6,11 @@ import { VERSION } from './constants.js';
 import { runDiagnostics } from './index.js';
 import { renderMarkdown } from './reporters/markdown.js';
 import { renderText } from './reporters/text.js';
+import { redactString } from './redact.js';
 
 interface CliOptions {
+  proxy?: string;
+  direct?: boolean;
   json?: boolean;
   report?: string;
   timeout: string;
@@ -22,6 +25,8 @@ const program = new Command()
   .description('诊断影响 OpenAI 和 Codex 的 DNS、TLS、HTTPS、WebSocket、代理及路由问题')
   .version(VERSION)
   .option('--claude', '在 OpenAI/Codex 之外，同时检查 Claude/Anthropic 连接')
+  .addOption(new Option('--proxy <url>', '显式使用 HTTP/HTTPS/SOCKS 代理').conflicts('direct'))
+  .addOption(new Option('--direct', '忽略显式代理，检查直连/TUN 路径').conflicts('proxy'))
   .option('--json', '以 JSON 输出')
   .option('--report <path>', '另存为 Markdown 或 JSON 报告')
   .option('--timeout <seconds>', '单项检查超时秒数', '8')
@@ -57,6 +62,8 @@ async function runOnce() {
     includeSensitive: options.includeSensitive ?? false,
     includeClaude: options.claude ?? false,
     language: 'zh',
+    proxy: options.proxy,
+    direct: options.direct,
   });
   const output = options.json
     ? JSON.stringify(report, null, 2)
@@ -88,6 +95,6 @@ async function main() {
 }
 
 main().catch((error: unknown) => {
-  process.stderr.write(`codex-netcheck 运行失败：${error instanceof Error ? error.message : String(error)}\n`);
+  process.stderr.write(`codex-netcheck 运行失败：${redactString(error instanceof Error ? error.message : String(error))}\n`);
   process.exitCode = 2;
 });
