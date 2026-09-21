@@ -11,13 +11,13 @@ Diagnose why OpenAI or Codex feels slow, reconnects repeatedly, or fails behind 
 ## Quick start
 
 ```bash
-npx codex-netcheck
+npx codex-netcheck@latest
 ```
 
 Check OpenAI/Codex and Claude together:
 
 ```bash
-npx codex-netcheck --claude
+npx codex-netcheck@latest --claude
 ```
 
 Example:
@@ -32,8 +32,18 @@ codex-netcheck · OpenAI/Codex network diagnostics
 ✓ OpenAI Realtime WebSocket: handshake reached service 302 ms
 
 Conclusion
-The OpenAI network path is healthy. Slow Codex responses are more likely caused by model reasoning, service load, or a long context.
+Network probes passed on the selected route. Codex account access and actual model requests were not tested.
 ```
+
+## Codex works, but the probes fail?
+
+Run `npx codex-netcheck@latest --version` and `npx codex-netcheck@latest --report report.json` first. Version 0.2.1 fixes probes that detected proxy settings but still connected directly. A client using an explicit proxy can work while probes on a separate direct/TUN path fail.
+
+Check the reported connection path. macOS system HTTPS/SOCKS proxies are detected automatically; on Linux, set `HTTPS_PROXY`/`ALL_PROXY` or pass `--proxy`. For an application-specific proxy, PAC, or incorrect auto-detection, specify the actual address, for example `--proxy http://127.0.0.1:6880` (replace the port with your own). Use `--direct` only to compare the direct/TUN path; it does not change your system proxy settings.
+
+The WebSocket probe targets OpenAI Realtime, not an actual Codex request. Failures do not by themselves establish that Codex is unusable, and passing probes do not rule out intermittent latency or account/request-specific failures. HTTP 401/403 confirms an HTTPS response, not successful authentication or inference.
+
+If the discrepancy remains, include the version, OS, proxy software, connection mode, and a complete redacted report in the issue. Reports retain hosts, IPs, and network structure: review them for private infrastructure before sharing. Never attach passwords, tokens, or cookies. See [issue #1](https://github.com/cntopcode/codex-netcheck/issues/1).
 
 ## Why not just `ping` or `curl`?
 
@@ -43,25 +53,25 @@ Codex uses more than basic ICMP connectivity. A healthy ping can coexist with br
 
 ```bash
 # Human-readable diagnostics
-npx codex-netcheck
+npx codex-netcheck@latest
 
 # Machine-readable output
-npx codex-netcheck --json
+npx codex-netcheck@latest --json
 
 # Save a redacted Markdown report
-npx codex-netcheck --report report.md
+npx codex-netcheck@latest --report report.md
 
 # Save JSON
-npx codex-netcheck --report report.json
+npx codex-netcheck@latest --report report.json
 
 # Repeat every 30 seconds
-npx codex-netcheck --watch 30
+npx codex-netcheck@latest --watch 30
 
 # Change the timeout per check
-npx codex-netcheck --timeout 15
+npx codex-netcheck@latest --timeout 15
 
 # Include Claude API and claude.ai checks
-npx codex-netcheck --claude
+npx codex-netcheck@latest --claude
 ```
 
 ## Checks
@@ -120,3 +130,10 @@ Bug reports and reproducible network cases are welcome. See [CONTRIBUTING.md](CO
 ## License
 
 MIT
+
+
+## Proxy support (0.2.1)
+
+The probes now use an explicit `--proxy URL`, HTTPS/ALL_PROXY environment variables, or the macOS HTTPS/SOCKS system proxy (in that order). Automatic mode honors NO_PROXY and system hostname exceptions. `--direct` checks the separate direct/TUN path without changing system settings. PAC requires an explicit proxy URL. HTTP-only HTTP_PROXY is not used for HTTPS targets.
+
+TCP checks the proxy listener; TLS, HTTPS, and WSS establish a target connection through the selected proxy with certificate validation enabled. Proxy-side DNS avoids interpreting local Fake-IP/TUN failures as failures of a working explicit proxy. Unauthenticated probes do not validate account access or actual model requests. See the Chinese README for installation from source.

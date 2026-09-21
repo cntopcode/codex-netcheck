@@ -1,3 +1,4 @@
+import { routeFor, describeRoute } from '../proxy.js';
 import { execFile } from 'node:child_process';
 import os from 'node:os';
 import { promisify } from 'node:util';
@@ -10,6 +11,13 @@ export const checkRoute: Probe = async (context) => {
   const results: CheckResult[] = [];
 
   for (const target of connectionTargets(context.options)) {
+    const route = routeFor(context, `https://${target.host}`);
+    if (route.url) {
+      results.push({ id: `route-${target.id}`, category: 'route', name: `${target.name} 网络路由`,
+        target: target.host, status: 'pass', summary: `经 ${describeRoute(route)}；目标路由由代理选择`,
+        details: { path: describeRoute(route) } });
+      continue;
+    }
     const address = context.dnsAddresses.get(target.host)?.[0];
     if (!address) {
       results.push({

@@ -24,6 +24,8 @@ export interface CheckResult {
 }
 
 export interface RunOptions {
+  proxy?: string;
+  direct?: boolean;
   timeoutMs: number;
   includeSensitive: boolean;
   includeClaude?: boolean;
@@ -58,6 +60,7 @@ export interface DiagnosticReport {
 export interface ProbeContext {
   options: RunOptions;
   dnsAddresses: Map<string, string[]>;
+  proxyPolicy?: import('./proxy.js').ProxyPolicy;
 }
 
 export type Probe = (context: ProbeContext) => Promise<CheckResult | CheckResult[]>;

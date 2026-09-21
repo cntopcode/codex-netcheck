@@ -1,6 +1,6 @@
 import type { RunOptions } from './types.js';
 
-export const VERSION = '0.2.0';
+export const VERSION = '0.2.1';
 
 export const OPENAI_HOSTS = ['api.openai.com', 'chatgpt.com'] as const;
 export const CLAUDE_HOSTS = ['api.anthropic.com', 'claude.ai'] as const;
